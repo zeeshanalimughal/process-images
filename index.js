@@ -43,10 +43,10 @@ async function processImage(inputImagePath) {
             destination: outputDirectory,
             plugins: [
                 imageminPngquant({
-                    quality: [1, 1],
+                    quality: [0.6, 0.8],
                 }),
                 imageminMozjpeg({
-                    quality: 200,
+                    quality: 100,
                 }),
             ],
         });
