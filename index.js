@@ -8,6 +8,7 @@ import imageminMozjpeg from 'imagemin-mozjpeg';
 const inputDirectory = 'images';
 const outputDirectory = 'output';
 
+// Create the output directory if it doesn't exist
 if (!fs.existsSync(outputDirectory)) {
     fs.mkdirSync(outputDirectory);
 }
@@ -17,6 +18,7 @@ async function processImage(inputImagePath) {
     try {
         const outputImagePath = path.join(outputDirectory, `output_${path.basename(inputImagePath)}`);
 
+        // Read the image using Sharp
         const image = sharp(inputImagePath);
 
         image.blur(0.3).sharpen();
@@ -32,13 +34,15 @@ async function processImage(inputImagePath) {
         image.modulate({
             saturation: 1.3,
         });
-
+        // Resize the image to 7000x4000 pixels
         await image.resize(7000, 4000, {
             fit: sharp.fit.inside,
         });
 
+        // Convert the image to the sRGB color space
         await image.toFile(outputImagePath);
 
+        // Compress the image using imagemin
         await imagemin([outputImagePath], {
             destination: outputDirectory,
             plugins: [
@@ -57,14 +61,17 @@ async function processImage(inputImagePath) {
     }
 }
 
+// Read the input directory
 fs.readdir(inputDirectory, async (err, files) => {
     if (err) {
         console.error(`Error reading input directory: ${err.message}`);
         return;
     }
 
+    // Filter the files to only include images
     const imageFiles = files.filter(file => /\.(jpg|jpeg|png)$/i.test(file));
 
+    // Process each image
     for (const file of imageFiles) {
         const inputImagePath = path.join(inputDirectory, file);
         await processImage(inputImagePath);
