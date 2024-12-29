@@ -19,18 +19,18 @@ async function processImage(inputImagePath) {
 
         const image = sharp(inputImagePath);
 
-        image.blur(0.7).sharpen();
+        image.blur(0.3).sharpen();
 
         image.modulate({
-            brightness: 1.25,
+            brightness: 1,
         });
 
         image.modulate({
-            contrast: 1.2,
+            contrast: 1.15,
         });
 
         image.modulate({
-            saturation: 2,
+            saturation: 1.3,
         });
 
         await image.resize(7000, 4000, {
